@@ -1,52 +1,30 @@
-# Importar as bibliotecas necessárias
-from pyspark import SparkContext
+import sys
+from pyspark.context import SparkContext
 from pyspark.sql import SparkSession
-from pyspark.ml.feature import RegexTokenizer, StopWordsRemover
-from pyspark.ml.classification import NaiveBayes, NaiveBayesModel
-from pyspark.ml import Pipeline
-from pyspark.sql.functions import col, udf
-from pyspark.sql.types import StringType
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-# Inicializar o Spark
-sc = SparkContext(appName="SentimentAnalysis")
-spark = SparkSession(sc)
+spark = SparkSession.builder.getOrCreate()
 
-# Carregar os dados de tweets
-data = spark.read.csv("tweets.csv", header=True, inferSchema=True)
+a = "Acompanhe"
+b = "o"
+c = "canal"
+d = "da"
+e = "Stack"
+f = "Tecnologias"
+g = "no"
+h = "Youtube"
 
-# Pré-processamento dos dados
-tokenizer = RegexTokenizer(inputCol="text", outputCol="words", pattern="\\W")
-stop_words = StopWordsRemover(inputCol="words", outputCol="filtered")
-pipeline = Pipeline(stages=[tokenizer, stop_words])
-data = pipeline.fit(data).transform(data)
+a1 = ('Este', a)
+b1 = ('é', b)
+c1 = ('um', c)
+d1 = ('exemplo', d)
+e1 = ('de', e)
+f1 = ('ultilização', f)
+g1 = ('do', g)
+h1 = ('Spark', h)
 
-# Análise de sentimentos
-sia = SentimentIntensityAnalyzer()
+data = [a1, b1, c1, d1, e1, f1, g1, h1]
+teste1 = spark.createDataFrame(data, ["Mensagem", "Lembrete"])
+teste1.show()
 
-
-def sentiment_score(text):
-    return sia.polarity_scores(text)["compound"]
-
-
-sentiment_score_udf = udf(sentiment_score, StringType())
-data = data.withColumn("sentiment_score", sentiment_score_udf(col("text")))
-
-# Treinar um modelo de classificação de Naive Bayes
-nb = NaiveBayes(smoothing=1.0, modelType="multinomial",
-                labelCol="sentiment", featuresCol="filtered")
-model = nb.fit(data)
-
-# Salvar o modelo treinado
-model.save("nb_model")
-
-# Carregar o modelo treinado
-model = NaiveBayesModel.load("nb_model")
-
-# Fazer previsões em novos dados
-new_data = spark.read.csv("new_tweets.csv", header=True, inferSchema=True)
-new_data = pipeline.fit(new_data).transform(new_data)
-predictions = model.transform(new_data)
-
-# Exibir as previsões de sentimentos
-predictions.select("text", "prediction").show()
+sample = teste1.sample(0.6, seed=1234)
+sample.show()
