@@ -15,3 +15,15 @@ pip install pyspark
 - Foi utilizado o databricks para desenvolvimento do projeto.
 
 - O notebook do projeto do databricks esta disponível no diretório do projeto.
+
+## Como foi feito
+
+- Foi criado uma conta no databricks para desenvolvimento do projeto.
+
+- Foi Intanciado um cluster no databricks para execução do projeto.
+
+- Foi criado um notebook no databricks
+
+- Utilizando o dataframe do proprio databricks foi feito a leitura do arquivo CSV.
+
+- Foi feito todo processamento dos dados utilizando o dataframe do databricks com spark.
