@@ -27,3 +27,19 @@ pip install pyspark
 - Utilizando o dataframe do proprio databricks foi feito a leitura do arquivo CSV.
 
 - Foi feito todo processamento dos dados utilizando o dataframe do databricks com spark.
+
+## MongoDB
+
+### Instalação
+
+- pip install pymongo
+
+### Conexão
+
+- from pymongo import MongoClient
+
+- client = MongoClient("String de conexão")
+
+- db = client["nome do banco"]
+
+- collection = db["nome da coleção"]
